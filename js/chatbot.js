@@ -9,7 +9,7 @@
 
 // IMPORTANT: Replace with your actual Gemini API key
 // For production, this should be handled server-side
-const GEMINI_API_KEY = 'AIzaSyAcTEUIK6LsZW69onoatX0wdzNN-tk7hYk';
+const GEMINI_API_KEY = 'AIzaSyDnosKWIwNr9xDkD5RCCwkOln5ZkMGsjXQ';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
 // ASTRA's personality and context
