@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASTRA - Relaxation Games</title>
-    
-    <!-- Tailwind CSS CDN -->
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts - Orbitron (Space Theme) -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Custom Styles -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="css/styles.css">
-    
-    <!-- Tailwind Config -->
+
     <script>
         tailwind.config = {
             theme: {
@@ -36,36 +35,35 @@
             }
         }
     </script>
-    
-    <!-- Additional Game Styles -->
+
     <style>
         .constellation-star {
             position: absolute;
             width: 16px;
             height: 16px;
-            background: radial-gradient(circle, white 0%, rgba(255,255,255,0.5) 50%, transparent 70%);
+            background: radial-gradient(circle, white 0%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
             transition: all 0.2s ease;
             z-index: 10;
         }
-        
+
         .constellation-star:hover {
             transform: translate(-50%, -50%) scale(1.5);
             box-shadow: 0 0 20px rgba(34, 211, 238, 0.8);
         }
-        
+
         .constellation-star.selected {
             background: radial-gradient(circle, #22d3ee 0%, rgba(34, 211, 238, 0.5) 50%, transparent 70%);
             box-shadow: 0 0 20px rgba(34, 211, 238, 0.8);
             transform: translate(-50%, -50%) scale(1.3);
         }
-        
+
         .constellation-star.connected {
             background: radial-gradient(circle, #22d3ee 0%, rgba(34, 211, 238, 0.8) 50%, transparent 70%);
         }
-        
+
         .points-popup {
             position: absolute;
             font-family: 'Orbitron', monospace;
@@ -77,96 +75,97 @@
             animation: floatUp 1s ease forwards;
             z-index: 100;
         }
-        
+
         .points-popup .combo {
             display: block;
             font-size: 0.75rem;
             color: #eab308;
         }
-        
+
         @keyframes floatUp {
             0% {
                 opacity: 1;
                 transform: translateY(0);
             }
+
             100% {
                 opacity: 0;
                 transform: translateY(-50px);
             }
         }
-        
+
         .game-star.missed {
             animation: starMiss 0.3s ease forwards;
         }
-        
+
         @keyframes starMiss {
             to {
                 transform: scale(0);
                 opacity: 0;
             }
         }
-        
-        /* Breathing circle custom animation */
+
         .breathing-active {
             animation: none !important;
         }
     </style>
 </head>
+
 <body class="bg-space-dark min-h-screen font-inter text-white overflow-x-hidden">
-    
-    <!-- Stars Background -->
+
     <div class="stars-container fixed inset-0 pointer-events-none z-0">
         <div id="stars"></div>
         <div id="stars2"></div>
         <div id="stars3"></div>
     </div>
 
-    <!-- Floating Planets (Decorative) -->
-    <div class="fixed top-32 left-20 w-36 h-36 rounded-full bg-gradient-to-br from-pink-600/20 to-purple-600/20 blur-2xl pointer-events-none"></div>
-    <div class="fixed bottom-32 right-10 w-52 h-52 rounded-full bg-gradient-to-br from-cyan-600/10 to-blue-600/10 blur-3xl pointer-events-none"></div>
+    <div
+        class="fixed top-32 left-20 w-36 h-36 rounded-full bg-gradient-to-br from-pink-600/20 to-purple-600/20 blur-2xl pointer-events-none">
+    </div>
+    <div
+        class="fixed bottom-32 right-10 w-52 h-52 rounded-full bg-gradient-to-br from-cyan-600/10 to-blue-600/10 blur-3xl pointer-events-none">
+    </div>
 
-    <!-- Navigation -->
     <nav class="relative z-50 border-b border-white/10 backdrop-blur-md bg-space-dark/50">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <!-- Logo -->
                 <a href="index.html" class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center glow-cyan">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center glow-cyan">
                         <span class="font-orbitron font-bold text-lg">A</span>
                     </div>
                     <span class="font-orbitron font-bold text-xl tracking-wider">ASTRA</span>
                 </a>
 
-                <!-- Nav Links -->
                 <div class="hidden md:flex items-center gap-8">
                     <a href="index.html" class="nav-link">Stress Check</a>
                     <a href="crew.html" class="nav-link">Crew Status</a>
                     <a href="games.html" class="nav-link active">Relaxation</a>
                 </div>
 
-                <!-- User Profile -->
                 <div id="userSection" class="flex items-center gap-4">
                     <div id="userLoggedOut">
                         <a href="login.html" class="btn-primary text-sm px-4 py-2">Login</a>
                     </div>
                     <div id="userLoggedIn" class="hidden flex items-center gap-3">
                         <span id="userName" class="text-sm text-gray-300 hidden lg:block"></span>
-                        <div class="w-9 h-9 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center cursor-pointer">
+                        <div
+                            class="w-9 h-9 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center cursor-pointer">
                             <span id="userInitial" class="font-bold text-sm">A</span>
                         </div>
-                        <button onclick="logout()" class="text-gray-400 hover:text-white text-sm hidden lg:block">Logout</button>
+                        <button onclick="logout()"
+                            class="text-gray-400 hover:text-white text-sm hidden lg:block">Logout</button>
                     </div>
                 </div>
 
-                <!-- Mobile Menu Button -->
                 <button id="mobileMenuBtn" class="md:hidden text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
 
-            <!-- Mobile Menu -->
             <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 border-t border-white/10 pt-4">
                 <div class="flex flex-col gap-4">
                     <a href="index.html" class="nav-link">Stress Check</a>
@@ -177,47 +176,37 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="relative z-10 max-w-7xl mx-auto px-4 py-8">
-        
-        <!-- Page Header -->
+
         <section class="text-center mb-8">
-            <h1 class="font-orbitron text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h1
+                class="font-orbitron text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Relaxation Zone
             </h1>
             <p class="text-gray-400 max-w-2xl mx-auto">
-                Take a break and reduce stress with these calming space-themed activities. Your mental health matters, astronaut.
+                Take a break and reduce stress with these calming space-themed activities. Your mental health matters,
+                astronaut.
             </p>
         </section>
 
-        <!-- Game Selection Tabs -->
         <section class="mb-8">
             <div class="flex flex-wrap justify-center gap-3">
-                <button 
-                    data-game-tab="breathing"
-                    onclick="switchGame('breathing')"
-                    class="px-6 py-3 rounded-xl border border-cyan-500 bg-white/10 text-white font-medium transition-all hover:bg-white/20 active"
-                >
+                <button data-game-tab="breathing" onclick="switchGame('breathing')"
+                    class="px-6 py-3 rounded-xl border border-cyan-500 bg-white/10 text-white font-medium transition-all hover:bg-white/20 active">
                     <span class="flex items-center gap-2">
                         <span>🫁</span>
                         <span>Breathing Exercise</span>
                     </span>
                 </button>
-                <button 
-                    data-game-tab="star-catcher"
-                    onclick="switchGame('star-catcher')"
-                    class="px-6 py-3 rounded-xl border border-transparent border-white/20 text-white font-medium transition-all hover:bg-white/10"
-                >
+                <button data-game-tab="star-catcher" onclick="switchGame('star-catcher')"
+                    class="px-6 py-3 rounded-xl border border-transparent border-white/20 text-white font-medium transition-all hover:bg-white/10">
                     <span class="flex items-center gap-2">
                         <span>⭐</span>
                         <span>Star Catcher</span>
                     </span>
                 </button>
-                <button 
-                    data-game-tab="constellation"
-                    onclick="switchGame('constellation')"
-                    class="px-6 py-3 rounded-xl border border-transparent border-white/20 text-white font-medium transition-all hover:bg-white/10"
-                >
+                <button data-game-tab="constellation" onclick="switchGame('constellation')"
+                    class="px-6 py-3 rounded-xl border border-transparent border-white/20 text-white font-medium transition-all hover:bg-white/10">
                     <span class="flex items-center gap-2">
                         <span>✨</span>
                         <span>Constellation Connect</span>
@@ -226,57 +215,43 @@
             </div>
         </section>
 
-        <!-- Game Containers -->
         <div class="max-w-4xl mx-auto">
-            
-            <!-- ==================== -->
-            <!-- BREATHING EXERCISE -->
-            <!-- ==================== -->
+
             <div data-game-container="breathing" class="card">
-                
-                <!-- Start Screen -->
+
                 <div id="breathingStart" class="text-center py-8">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500/30 to-purple-500/30 flex items-center justify-center">
+                    <div
+                        class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500/30 to-purple-500/30 flex items-center justify-center">
                         <span class="text-5xl">🫁</span>
                     </div>
                     <h2 class="font-orbitron text-2xl font-bold mb-3">Guided Breathing</h2>
                     <p class="text-gray-400 max-w-md mx-auto mb-6">
-                        Follow the expanding and contracting circle to regulate your breathing. This technique helps reduce stress and anxiety.
+                        Follow the expanding and contracting circle to regulate your breathing. This technique helps
+                        reduce stress and anxiety.
                     </p>
-                    
-                    <!-- Cycle Selection -->
+
                     <div class="mb-6">
                         <p class="text-sm text-gray-400 mb-3">Select number of cycles:</p>
                         <div class="flex justify-center gap-3">
-                            <button 
-                                data-cycles="3"
-                                onclick="setBreathingCycles(3)"
-                                class="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition-colors"
-                            >
+                            <button data-cycles="3" onclick="setBreathingCycles(3)"
+                                class="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition-colors">
                                 3 cycles
                             </button>
-                            <button 
-                                data-cycles="5"
-                                onclick="setBreathingCycles(5)"
-                                class="px-4 py-2 rounded-lg border border-cyan-500 bg-cyan-500/30 transition-colors"
-                            >
+                            <button data-cycles="5" onclick="setBreathingCycles(5)"
+                                class="px-4 py-2 rounded-lg border border-cyan-500 bg-cyan-500/30 transition-colors">
                                 5 cycles
                             </button>
-                            <button 
-                                data-cycles="10"
-                                onclick="setBreathingCycles(10)"
-                                class="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition-colors"
-                            >
+                            <button data-cycles="10" onclick="setBreathingCycles(10)"
+                                class="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition-colors">
                                 10 cycles
                             </button>
                         </div>
                     </div>
-                    
+
                     <button onclick="startBreathingExercise()" class="btn-primary px-8 py-3 text-lg">
                         Begin Exercise
                     </button>
-                    
-                    <!-- Benefits -->
+
                     <div class="grid grid-cols-3 gap-4 mt-8 text-center">
                         <div class="p-3">
                             <div class="text-2xl mb-2">😌</div>
@@ -292,335 +267,328 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Exercise Screen -->
-                <div id="breathingExercise" class="hidden py-8">
-                    <!-- Progress Bar -->
-                    <div class="mb-8">
-                        <div class="flex justify-between text-sm text-gray-400 mb-2">
-                            <span id="breathingCycleCounter">Cycle 1 of 5</span>
-                            <span>Progress</span>
-                        </div>
-                        <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-                            <div id="breathingProgressBar" class="h-full bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-500" style="width: 0%"></div>
-                        </div>
+
+            </div>
+
+            <div id="breathingExercise" class="hidden py-8">
+                <div class="mb-8">
+                    <div class="flex justify-between text-sm text-gray-400 mb-2">
+                        <span id="breathingCycleCounter">Cycle 1 of 5</span>
+                        <span>Progress</span>
                     </div>
-                    
-                    <!-- Breathing Circle -->
-                    <div class="flex flex-col items-center justify-center">
-                        <div 
-                            id="breathingCircle" 
-                            class="breathing-circle bg-gradient-to-br from-cyan-500 to-blue-600 mb-8"
-                            style="transform: scale(0.6)"
-                        >
-                            <span id="breathingTimer" class="text-4xl">4</span>
-                        </div>
-                        
-                        <p id="breathingPhaseText" class="font-orbitron text-2xl text-cyan-400 mb-8">
-                            Breathe In...
-                        </p>
-                        
-                        <button onclick="stopBreathingExercise()" class="btn-secondary">
-                            Stop Exercise
-                        </button>
+                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div id="breathingProgressBar"
+                            class="h-full bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-500"
+                            style="width: 0%"></div>
                     </div>
                 </div>
-                
-                <!-- Complete Screen -->
-                <div id="breathingComplete" class="hidden text-center py-8">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500/30 to-cyan-500/30 flex items-center justify-center">
-                        <span class="text-5xl">✨</span>
+
+                <div class="flex flex-col items-center justify-center">
+                    <div id="breathingCircle" class="breathing-circle bg-gradient-to-br from-cyan-500 to-blue-600 mb-8"
+                        style="transform: scale(0.6)">
+                        <span id="breathingTimer" class="text-4xl">4</span>
                     </div>
-                    <h2 class="font-orbitron text-2xl font-bold mb-3 text-green-400">Exercise Complete!</h2>
-                    <p class="text-gray-400 max-w-md mx-auto mb-6">
-                        Great work, astronaut! Take a moment to notice how you feel. Your body and mind thank you.
+
+                    <p id="breathingPhaseText" class="font-orbitron text-2xl text-cyan-400 mb-8">
+                        Breathe In...
                     </p>
-                    
-                    <!-- Stats -->
-                    <div class="flex justify-center gap-8 mb-8">
-                        <div class="text-center">
-                            <div class="font-orbitron text-3xl font-bold text-cyan-400" id="breathingDuration">2:30</div>
-                            <div class="text-sm text-gray-400">Duration</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-orbitron text-3xl font-bold text-purple-400" id="breathingCyclesCompleted">5</div>
-                            <div class="text-sm text-gray-400">Cycles</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-center gap-4">
-                        <button onclick="resetBreathing()" class="btn-primary">
-                            Do Another Session
-                        </button>
-                        <a href="index.html" class="btn-secondary">
-                            Back to Dashboard
-                        </a>
-                    </div>
+
+                    <button onclick="stopBreathingExercise()" class="btn-secondary">
+                        Stop Exercise
+                    </button>
                 </div>
             </div>
 
-            <!-- ==================== -->
-            <!-- STAR CATCHER GAME -->
-            <!-- ==================== -->
-            <div data-game-container="star-catcher" class="card hidden">
-                
-                <!-- Start Screen -->
-                <div id="starCatcherStart" class="text-center py-8">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-500/30 to-orange-500/30 flex items-center justify-center">
-                        <span class="text-5xl">⭐</span>
-                    </div>
-                    <h2 class="font-orbitron text-2xl font-bold mb-3">Star Catcher</h2>
-                    <p class="text-gray-400 max-w-md mx-auto mb-6">
-                        Click on the glowing stars before they fade away. Build combos for bonus points! A calming way to focus your mind.
-                    </p>
-                    
-                    <!-- Instructions -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-lg mx-auto">
-                        <div class="p-3 bg-white/5 rounded-lg">
-                            <div class="w-4 h-4 mx-auto mb-2 rounded-full bg-cyan-400"></div>
-                            <div class="text-xs text-gray-400">+10 pts</div>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded-lg">
-                            <div class="w-4 h-4 mx-auto mb-2 rounded-full bg-purple-400"></div>
-                            <div class="text-xs text-gray-400">+20 pts</div>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded-lg">
-                            <div class="w-4 h-4 mx-auto mb-2 rounded-full bg-pink-400"></div>
-                            <div class="text-xs text-gray-400">+30 pts</div>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded-lg">
-                            <div class="w-4 h-4 mx-auto mb-2 rounded-full bg-yellow-400"></div>
-                            <div class="text-xs text-gray-400">+50 pts</div>
-                        </div>
-                    </div>
-                    
-                    <button onclick="startStarCatcher()" class="btn-primary px-8 py-3 text-lg">
-                        Start Game
-                    </button>
+            <div id="breathingComplete" class="hidden text-center py-8">
+                <div
+                    class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500/30 to-cyan-500/30 flex items-center justify-center">
+                    <span class="text-5xl">✨</span>
                 </div>
-                
-                <!-- Game Screen -->
-                <div id="starCatcherGame" class="hidden">
-                    <!-- Game Stats -->
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-6">
-                            <div>
-                                <span class="text-gray-400 text-sm">Score:</span>
-                                <span class="font-orbitron text-xl font-bold text-cyan-400 ml-2" id="starScore">0</span>
-                            </div>
-                            <div>
-                                <span class="text-gray-400 text-sm">Combo:</span>
-                                <span class="font-orbitron text-xl font-bold text-yellow-400 ml-2" id="starCombo">x0</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-6">
-                            <div>
-                                <span class="text-gray-400 text-sm">Level:</span>
-                                <span class="font-orbitron text-xl font-bold text-purple-400 ml-2" id="starLevel">1</span>
-                            </div>
-                            <div>
-                                <span class="text-gray-400 text-sm">Time:</span>
-                                <span class="font-orbitron text-xl font-bold text-white ml-2" id="starTime">60</span>
-                                <span class="text-gray-400 text-sm">s</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Container -->
-                    <div id="starField" class="game-container">
-                        <!-- Stars spawn here -->
-                    </div>
-                </div>
-                
-                <!-- Game Over Screen -->
-                <div id="starCatcherGameOver" class="hidden text-center py-8">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500/30 to-purple-500/30 flex items-center justify-center">
-                        <span class="text-5xl">🌟</span>
-                    </div>
-                    <h2 class="font-orbitron text-2xl font-bold mb-3">Game Over!</h2>
-                    <p id="gameOverMessage" class="text-gray-400 max-w-md mx-auto mb-6">
-                        Great job catching those stars!
-                    </p>
-                    
-                    <!-- Stats -->
-                    <div class="flex justify-center gap-8 mb-8">
-                        <div class="text-center">
-                            <div class="font-orbitron text-4xl font-bold text-cyan-400" id="finalScore">0</div>
-                            <div class="text-sm text-gray-400">Final Score</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-orbitron text-4xl font-bold text-yellow-400" id="maxComboDisplay">0</div>
-                            <div class="text-sm text-gray-400">Max Combo</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-center gap-4">
-                        <button onclick="startStarCatcher()" class="btn-primary">
-                            Play Again
-                        </button>
-                        <button onclick="resetStarCatcher()" class="btn-secondary">
-                            Back to Menu
-                        </button>
-                    </div>
-                </div>
-            </div>
+                <h2 class="font-orbitron text-2xl font-bold mb-3 text-green-400">Exercise Complete!</h2>
+                <p class="text-gray-400 max-w-md mx-auto mb-6">
+                    Great work, astronaut! Take a moment to notice how you feel. Your body and mind thank you.
+                </p>
 
-            <!-- ==================== -->
-            <!-- CONSTELLATION CONNECT -->
-            <!-- ==================== -->
-            <div data-game-container="constellation" class="card hidden">
-                
-                <!-- Start Screen -->
-                <div id="constellationStart" class="text-center py-8">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-indigo-500/30 to-purple-500/30 flex items-center justify-center">
-                        <span class="text-5xl">✨</span>
+                <div class="flex justify-center gap-8 mb-8">
+                    <div class="text-center">
+                        <div class="font-orbitron text-3xl font-bold text-cyan-400" id="breathingDuration">2:30</div>
+                        <div class="text-sm text-gray-400">Duration</div>
                     </div>
-                    <h2 class="font-orbitron text-2xl font-bold mb-3">Constellation Connect</h2>
-                    <p class="text-gray-400 max-w-md mx-auto mb-6">
-                        Connect the stars to form famous constellations. Click on two stars to draw a line between them. A meditative pattern-matching experience.
-                    </p>
-                    
-                    <!-- Constellations Preview -->
-                    <div class="grid grid-cols-3 gap-4 mb-8 max-w-md mx-auto">
-                        <div class="p-4 bg-white/5 rounded-lg">
-                            <div class="text-2xl mb-2">🌟</div>
-                            <div class="text-sm font-medium">Orion</div>
-                            <div class="text-xs text-gray-500">8 stars</div>
+                    <div class="text-center">
+                        <div class="font-orbitron text-3xl font-bold text-purple-400" id="breathingCyclesCompleted">5
                         </div>
-                        <div class="p-4 bg-white/5 rounded-lg">
-                            <div class="text-2xl mb-2">⭐</div>
-                            <div class="text-sm font-medium">Big Dipper</div>
-                            <div class="text-xs text-gray-500">7 stars</div>
-                        </div>
-                        <div class="p-4 bg-white/5 rounded-lg">
-                            <div class="text-2xl mb-2">💫</div>
-                            <div class="text-sm font-medium">Cassiopeia</div>
-                            <div class="text-xs text-gray-500">5 stars</div>
-                        </div>
+                        <div class="text-sm text-gray-400">Cycles</div>
                     </div>
-                    
-                    <button onclick="startConstellationGame()" class="btn-primary px-8 py-3 text-lg">
-                        Start Connecting
+                </div>
+
+                <div class="flex justify-center gap-4">
+                    <button onclick="resetBreathing()" class="btn-primary">
+                        Do Another Session
                     </button>
-                </div>
-                
-                <!-- Game Screen -->
-                <div id="constellationGame" class="hidden">
-                    <!-- Game Stats -->
-                    <div class="flex justify-between items-center mb-4">
-                        <div>
-                            <span class="text-gray-400 text-sm">Constellation:</span>
-                            <span class="font-orbitron text-lg font-bold text-cyan-400 ml-2" id="constellationName">Orion</span>
-                        </div>
-                        <div class="flex items-center gap-6">
-                            <div>
-                                <span class="text-gray-400 text-sm">Progress:</span>
-                                <span class="font-orbitron text-lg font-bold text-purple-400 ml-2" id="constellationProgress">1 / 3</span>
-                            </div>
-                            <div>
-                                <span class="text-gray-400 text-sm">Score:</span>
-                                <span class="font-orbitron text-lg font-bold text-yellow-400 ml-2" id="constellationScore">0</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Container -->
-                    <div id="constellationField" class="game-container relative">
-                        <!-- Stars and lines render here -->
-                    </div>
-                    
-                    <p class="text-center text-gray-500 text-sm mt-4">
-                        Click two stars to connect them. Form all the correct connections to complete the constellation.
-                    </p>
-                </div>
-                
-                <!-- Complete Screen -->
-                <div id="constellationComplete" class="hidden text-center py-8">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-500/30 to-orange-500/30 flex items-center justify-center">
-                        <span class="text-5xl">🏆</span>
-                    </div>
-                    <h2 class="font-orbitron text-2xl font-bold mb-3 text-yellow-400">Constellation Master!</h2>
-                    <p class="text-gray-400 max-w-md mx-auto mb-6">
-                        You've connected all the constellations! The night sky bows to your cosmic knowledge.
-                    </p>
-                    
-                    <!-- Stats -->
-                    <div class="flex justify-center gap-8 mb-8">
-                        <div class="text-center">
-                            <div class="font-orbitron text-4xl font-bold text-cyan-400" id="constellationFinalScore">0</div>
-                            <div class="text-sm text-gray-400">Total Score</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-orbitron text-4xl font-bold text-purple-400">3</div>
-                            <div class="text-sm text-gray-400">Constellations</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-center gap-4">
-                        <button onclick="startConstellationGame()" class="btn-primary">
-                            Play Again
-                        </button>
-                        <button onclick="resetConstellationGame()" class="btn-secondary">
-                            Back to Menu
-                        </button>
-                    </div>
+                    <a href="index.html" class="btn-secondary">
+                        Back to Dashboard
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Benefits Section -->
+        <div data-game-container="star-catcher" class="card hidden">
+
+            <div id="starCatcherStart" class="text-center py-8">
+                <div
+                    class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-500/30 to-orange-500/30 flex items-center justify-center">
+                    <span class="text-5xl">⭐</span>
+                </div>
+                <h2 class="font-orbitron text-2xl font-bold mb-3">Star Catcher</h2>
+                <p class="text-gray-400 max-w-md mx-auto mb-6">
+                    Click on the glowing stars before they fade away. Build combos for bonus points! A calming way to
+                    focus your mind.
+                </p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-lg mx-auto">
+                    <div class="p-3 bg-white/5 rounded-lg">
+                        <div class="w-4 h-4 mx-auto mb-2 rounded-full bg-cyan-400"></div>
+                        <div class="text-xs text-gray-400">+10 pts</div>
+                    </div>
+                    <div class="p-3 bg-white/5 rounded-lg">
+                        <div class="w-4 h-4 mx-auto mb-2 rounded-full bg-purple-400"></div>
+                        <div class="text-xs text-gray-400">+20 pts</div>
+                    </div>
+                    <div class="p-3 bg-white/5 rounded-lg">
+                        <div class="w-4 h-4 mx-auto mb-2 rounded-full bg-pink-400"></div>
+                        <div class="text-xs text-gray-400">+30 pts</div>
+                    </div>
+                    <div class="p-3 bg-white/5 rounded-lg">
+                        <div class="w-4 h-4 mx-auto mb-2 rounded-full bg-yellow-400"></div>
+                        <div class="text-xs text-gray-400">+50 pts</div>
+                    </div>
+                </div>
+
+                <button onclick="startStarCatcher()" class="btn-primary px-8 py-3 text-lg">
+                    Start Game
+                </button>
+            </div>
+
+            <div id="starCatcherGame" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-6">
+                        <div>
+                            <span class="text-gray-400 text-sm">Score:</span>
+                            <span class="font-orbitron text-xl font-bold text-cyan-400 ml-2" id="starScore">0</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 text-sm">Combo:</span>
+                            <span class="font-orbitron text-xl font-bold text-yellow-400 ml-2" id="starCombo">x0</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div>
+                            <span class="text-gray-400 text-sm">Level:</span>
+                            <span class="font-orbitron text-xl font-bold text-purple-400 ml-2" id="starLevel">1</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 text-sm">Time:</span>
+                            <span class="font-orbitron text-xl font-bold text-white ml-2" id="starTime">60</span>
+                            <span class="text-gray-400 text-sm">s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="starField" class="game-container">
+                </div>
+            </div>
+
+            <div id="starCatcherGameOver" class="hidden text-center py-8">
+                <div
+                    class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500/30 to-purple-500/30 flex items-center justify-center">
+                    <span class="text-5xl">🌟</span>
+                </div>
+                <h2 class="font-orbitron text-2xl font-bold mb-3">Game Over!</h2>
+                <p id="gameOverMessage" class="text-gray-400 max-w-md mx-auto mb-6">
+                    Great job catching those stars!
+                </p>
+
+                <div class="flex justify-center gap-8 mb-8">
+                    <div class="text-center">
+                        <div class="font-orbitron text-4xl font-bold text-cyan-400" id="finalScore">0</div>
+                        <div class="text-sm text-gray-400">Final Score</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-orbitron text-4xl font-bold text-yellow-400" id="maxComboDisplay">0</div>
+                        <div class="text-sm text-gray-400">Max Combo</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4">
+                    <button onclick="startStarCatcher()" class="btn-primary">
+                        Play Again
+                    </button>
+                    <button onclick="resetStarCatcher()" class="btn-secondary">
+                        Back to Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div data-game-container="constellation" class="card hidden">
+
+            <div id="constellationStart" class="text-center py-8">
+                <div
+                    class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-indigo-500/30 to-purple-500/30 flex items-center justify-center">
+                    <span class="text-5xl">✨</span>
+                </div>
+                <h2 class="font-orbitron text-2xl font-bold mb-3">Constellation Connect</h2>
+                <p class="text-gray-400 max-w-md mx-auto mb-6">
+                    Connect the stars to form famous constellations. Click on two stars to draw a line between them. A
+                    meditative pattern-matching experience.
+                </p>
+
+                <div class="grid grid-cols-3 gap-4 mb-8 max-w-md mx-auto">
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="text-2xl mb-2">🌟</div>
+                        <div class="text-sm font-medium">Orion</div>
+                        <div class="text-xs text-gray-500">8 stars</div>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="text-2xl mb-2">⭐</div>
+                        <div class="text-sm font-medium">Big Dipper</div>
+                        <div class="text-xs text-gray-500">7 stars</div>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded-lg">
+                        <div class="text-2xl mb-2">💫</div>
+                        <div class="text-sm font-medium">Cassiopeia</div>
+                        <div class="text-xs text-gray-500">5 stars</div>
+                    </div>
+                </div>
+
+                <button onclick="startConstellationGame()" class="btn-primary px-8 py-3 text-lg">
+                    Start Connecting
+                </button>
+            </div>
+
+            <div id="constellationGame" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <span class="text-gray-400 text-sm">Constellation:</span>
+                        <span class="font-orbitron text-lg font-bold text-cyan-400 ml-2"
+                            id="constellationName">Orion</span>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div>
+                            <span class="text-gray-400 text-sm">Progress:</span>
+                            <span class="font-orbitron text-lg font-bold text-purple-400 ml-2"
+                                id="constellationProgress">1 / 3</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400 text-sm">Score:</span>
+                            <span class="font-orbitron text-lg font-bold text-yellow-400 ml-2"
+                                id="constellationScore">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="constellationField" class="game-container relative">
+                </div>
+
+                <p class="text-center text-gray-500 text-sm mt-4">
+                    Click two stars to connect them. Form all the correct connections to complete the constellation.
+                </p>
+            </div>
+
+            <div id="constellationComplete" class="hidden text-center py-8">
+                <div
+                    class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-500/30 to-orange-500/30 flex items-center justify-center">
+                    <span class="text-5xl">🏆</span>
+                </div>
+                <h2 class="font-orbitron text-2xl font-bold mb-3 text-yellow-400">Constellation Master!</h2>
+                <p class="text-gray-400 max-w-md mx-auto mb-6">
+                    You've connected all the constellations! The night sky bows to your cosmic knowledge.
+                </p>
+
+                <div class="flex justify-center gap-8 mb-8">
+                    <div class="text-center">
+                        <div class="font-orbitron text-4xl font-bold text-cyan-400" id="constellationFinalScore">0</div>
+                        <div class="text-sm text-gray-400">Total Score</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-orbitron text-4xl font-bold text-purple-400">3</div>
+                        <div class="text-sm text-gray-400">Constellations</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4">
+                    <button onclick="startConstellationGame()" class="btn-primary">
+                        Play Again
+                    </button>
+                    <button onclick="resetConstellationGame()" class="btn-secondary">
+                        Back to Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+
         <section class="mt-12 max-w-4xl mx-auto">
             <div class="card bg-gradient-to-br from-purple-500/10 to-cyan-500/10">
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <div class="w-20 h-20 rounded-2xl bg-purple-500/20 flex items-center justify-center flex-shrink-0">
                         <svg class="w-10 h-10 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
                     </div>
                     <div class="text-center md:text-left">
                         <h3 class="font-orbitron text-xl font-bold mb-2">Why Relaxation Games?</h3>
                         <p class="text-gray-400">
-                            Studies show that brief, mindful gaming sessions can significantly reduce cortisol levels and improve mood. 
-                            These activities provide a healthy distraction, helping astronauts maintain mental clarity and emotional balance during long missions.
+                            Studies show that brief, mindful gaming sessions can significantly reduce cortisol levels
+                            and improve mood.
+                            These activities provide a healthy distraction, helping astronauts maintain mental clarity
+                            and emotional balance during long missions.
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Quick Links -->
         <section class="mt-8 max-w-4xl mx-auto">
             <div class="grid md:grid-cols-2 gap-4">
                 <a href="index.html" class="card p-4 hover:border-cyan-500/50 transition-colors group">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
                         </div>
                         <div>
                             <div class="font-semibold">Check Your Stress Level</div>
                             <div class="text-sm text-gray-400">See how relaxation affected you</div>
                         </div>
-                        <svg class="w-5 h-5 text-gray-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <svg class="w-5 h-5 text-gray-500 ml-auto" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
-                
-                <button onclick="openChatbot()" class="card p-4 hover:border-purple-500/50 transition-colors group text-left w-full">
+
+                <button onclick="openChatbot()"
+                    class="card p-4 hover:border-purple-500/50 transition-colors group text-left w-full">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                             <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
                         </div>
                         <div>
                             <div class="font-semibold">Talk to ASTRA</div>
                             <div class="text-sm text-gray-400">Get emotional support anytime</div>
                         </div>
-                        <svg class="w-5 h-5 text-gray-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <svg class="w-5 h-5 text-gray-500 ml-auto" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
                     </div>
                 </button>
@@ -628,24 +596,19 @@
         </section>
     </main>
 
-    <!-- ASTRA Chatbot Widget -->
     <div id="chatbotWidget" class="fixed bottom-6 right-6 z-50">
-        <!-- Chat Bubble Button -->
-        <button 
-            id="chatbotToggle" 
-            onclick="toggleChatbot()"
-            class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center shadow-lg glow-cyan hover:scale-110 transition-transform"
-        >
+        <button id="chatbotToggle" onclick="toggleChatbot()"
+            class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center shadow-lg glow-cyan hover:scale-110 transition-transform">
             <span class="font-orbitron font-bold text-xl">A</span>
         </button>
 
-        <!-- Chat Window -->
-        <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-80 sm:w-96 bg-space-dark border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Chat Header -->
+        <div id="chatWindow"
+            class="hidden absolute bottom-20 right-0 w-80 sm:w-96 bg-space-dark border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
             <div class="bg-gradient-to-r from-cyan-500/20 to-purple-600/20 p-4 border-b border-white/10">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center">
                             <span class="font-orbitron font-bold">A</span>
                         </div>
                         <div>
@@ -658,13 +621,13 @@
                     </div>
                     <button onclick="toggleChatbot()" class="text-gray-400 hover:text-white">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
             </div>
 
-            <!-- Chat Messages -->
             <div id="chatMessages" class="h-80 overflow-y-auto p-4 space-y-4">
                 <div class="chat-message bot">
                     <div class="message-bubble">
@@ -673,18 +636,14 @@
                 </div>
             </div>
 
-            <!-- Chat Input -->
             <div class="p-4 border-t border-white/10">
                 <form id="chatForm" class="flex gap-2">
-                    <input 
-                        type="text" 
-                        id="chatInput" 
-                        placeholder="Type a message..." 
-                        class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-cyan-500/50"
-                    >
+                    <input type="text" id="chatInput" placeholder="Type a message..."
+                        class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-cyan-500/50">
                     <button type="submit" class="btn-primary px-4 py-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                         </svg>
                     </button>
                 </form>
@@ -692,7 +651,6 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed top-4 right-4 z-50 hidden">
         <div class="bg-space-dark border border-white/10 rounded-lg p-4 shadow-lg flex items-center gap-3 max-w-sm">
             <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center"></div>
@@ -703,21 +661,19 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
-    <!-- App Scripts -->
     <script src="js/firebase.js"></script>
     <script src="js/games.js"></script>
     <script src="js/chatbot.js"></script>
 
-    <!-- Mobile Menu Toggle -->
     <script>
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        document.getElementById('mobileMenuBtn').addEventListener('click', function () {
             document.getElementById('mobileMenu').classList.toggle('hidden');
         });
     </script>
 </body>
+
 </html>

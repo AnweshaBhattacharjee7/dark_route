@@ -1,11 +1,3 @@
-/* ========================================
-   ASTRA - Main Application
-   Stress Detection + Recommendations
-   ======================================== */
-
-// -------------------- 
-// DOM Elements
-// -------------------- 
 const stressForm = document.getElementById('stressForm');
 const sleepHoursInput = document.getElementById('sleepHours');
 const moodLevelInput = document.getElementById('moodLevel');
@@ -13,48 +5,34 @@ const moodValueDisplay = document.getElementById('moodValue');
 const heartRateInput = document.getElementById('heartRate');
 const activityLevelSelect = document.getElementById('activityLevel');
 
-// Result Elements
 const stressCircle = document.getElementById('stressCircle');
 const stressPercentage = document.getElementById('stressPercentage');
 const stressLevelBadge = document.getElementById('stressLevelBadge');
 const stressLevelText = document.getElementById('stressLevelText');
 const stressExplanation = document.getElementById('stressExplanation');
 
-// Recommendations
 const recommendationsSection = document.getElementById('recommendationsSection');
 const recommendationsList = document.getElementById('recommendationsList');
 
-// Stats
 const lastCheckTime = document.getElementById('lastCheckTime');
 const checksToday = document.getElementById('checksToday');
 const avgStress = document.getElementById('avgStress');
 
-// Modal
 const highStressModal = document.getElementById('highStressModal');
 
-// -------------------- 
-// Event Listeners
-// -------------------- 
-
-// Mood slider update
 if (moodLevelInput) {
     moodLevelInput.addEventListener('input', (e) => {
         moodValueDisplay.textContent = e.target.value;
     });
 }
 
-// Form submission
 if (stressForm) {
     stressForm.addEventListener('submit', handleStressCheck);
 }
 
-// -------------------- 
-// Stress Check Handler
-// -------------------- 
 async function handleStressCheck(e) {
     e.preventDefault();
     
-    // Show loading state
     const analyzeText = document.getElementById('analyzeText');
     const analyzeLoader = document.getElementById('analyzeLoader');
     
@@ -63,26 +41,20 @@ async function handleStressCheck(e) {
         analyzeLoader.classList.remove('hidden');
     }
     
-    // Get input values
     const sleepHours = parseFloat(sleepHoursInput.value);
     const moodLevel = parseInt(moodLevelInput.value);
     const heartRate = parseInt(heartRateInput.value);
     const activityLevel = activityLevelSelect.value;
     
-    // Calculate stress level
     const stressResult = calculateStressLevel(sleepHours, moodLevel, heartRate, activityLevel);
     
-    // Simulate processing delay for UX
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Display results
     displayStressResult(stressResult);
     
-    // Generate and display recommendations
     const recommendations = generateRecommendations(stressResult, sleepHours, moodLevel, heartRate, activityLevel);
     displayRecommendations(recommendations);
     
-    // Save to Firebase
     const stressData = {
         sleepHours,
         moodLevel,
@@ -95,33 +67,24 @@ async function handleStressCheck(e) {
     
     await saveStressCheck(stressData);
     
-    // Update local UI stats
     updateLocalStats(stressResult.level);
     
-    // Show high stress modal if needed
     if (stressResult.level === 'high') {
         showHighStressModal();
     }
     
-    // Reset button state
     if (analyzeText && analyzeLoader) {
         analyzeText.classList.remove('hidden');
         analyzeLoader.classList.add('hidden');
     }
     
-    // Show success toast
     showToast('success', 'Analysis Complete', `Stress level: ${capitalizeFirst(stressResult.level)}`);
 }
 
-// -------------------- 
-// Stress Calculation Logic
-// -------------------- 
 function calculateStressLevel(sleepHours, moodLevel, heartRate, activityLevel) {
     let stressScore = 0;
     let factors = [];
     
-    // Sleep Analysis (0-30 points)
-    // Optimal sleep: 7-9 hours
     if (sleepHours < 4) {
         stressScore += 30;
         factors.push('severely inadequate sleep');
@@ -136,8 +99,6 @@ function calculateStressLevel(sleepHours, moodLevel, heartRate, activityLevel) {
         factors.push('excessive sleep (possible fatigue indicator)');
     }
     
-    // Mood Analysis (0-35 points)
-    // Scale: 1-10, lower is worse
     if (moodLevel <= 2) {
         stressScore += 35;
         factors.push('very low mood');
@@ -150,11 +111,7 @@ function calculateStressLevel(sleepHours, moodLevel, heartRate, activityLevel) {
     } else if (moodLevel <= 6) {
         stressScore += 5;
     }
-    // 7+ mood adds no stress
     
-    // Heart Rate Analysis (0-25 points)
-    // Normal resting: 60-100 BPM
-    // In space, astronauts may have slightly different baselines
     if (heartRate < 50) {
         stressScore += 15;
         factors.push('unusually low heart rate');
@@ -168,29 +125,23 @@ function calculateStressLevel(sleepHours, moodLevel, heartRate, activityLevel) {
         stressScore += 5;
     }
     
-    // Activity Level Impact (0-10 points or reduction)
     switch (activityLevel) {
         case 'none':
             stressScore += 10;
             factors.push('no physical activity');
             break;
         case 'light':
-            // Light activity is baseline, no change
             break;
         case 'moderate':
-            stressScore -= 5; // Exercise reduces stress
+            stressScore -= 5;
             break;
         case 'intense':
-            // Intense exercise can increase heart rate temporarily
-            // but overall reduces stress
             stressScore -= 5;
             break;
     }
     
-    // Ensure score is within bounds
     stressScore = Math.max(0, Math.min(100, stressScore));
     
-    // Determine stress level
     let level, explanation;
     
     if (stressScore <= 25) {
@@ -220,24 +171,18 @@ function calculateStressLevel(sleepHours, moodLevel, heartRate, activityLevel) {
     };
 }
 
-// -------------------- 
-// Display Stress Result
-// -------------------- 
 function displayStressResult(result) {
-    // Update gauge circle
-    const circumference = 2 * Math.PI * 40; // radius = 40
+    const circumference = 2 * Math.PI * 40;
     const offset = circumference - (result.score / 100) * circumference;
     
     if (stressCircle) {
         stressCircle.style.strokeDashoffset = offset;
     }
     
-    // Update percentage display
     if (stressPercentage) {
         animateNumber(stressPercentage, 0, result.score, 1000);
     }
     
-    // Update gradient colors based on level
     const gradientStart = document.getElementById('gradientStart');
     const gradientEnd = document.getElementById('gradientEnd');
     
@@ -258,7 +203,6 @@ function displayStressResult(result) {
         }
     }
     
-    // Update badge
     if (stressLevelBadge) {
         stressLevelBadge.className = `stress-badge stress-badge-${result.level}`;
     }
@@ -267,16 +211,12 @@ function displayStressResult(result) {
         stressLevelText.textContent = `${capitalizeFirst(result.level)} Stress`;
     }
     
-    // Update explanation
     if (stressExplanation) {
         stressExplanation.textContent = result.explanation;
         stressExplanation.classList.add('fade-in');
     }
 }
 
-// -------------------- 
-// Animate Number
-// -------------------- 
 function animateNumber(element, start, end, duration) {
     const startTime = performance.now();
     
@@ -284,7 +224,6 @@ function animateNumber(element, start, end, duration) {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
         
-        // Easing function
         const easeOut = 1 - Math.pow(1 - progress, 3);
         const current = Math.round(start + (end - start) * easeOut);
         
@@ -298,13 +237,9 @@ function animateNumber(element, start, end, duration) {
     requestAnimationFrame(update);
 }
 
-// -------------------- 
-// Generate Recommendations
-// -------------------- 
 function generateRecommendations(stressResult, sleepHours, moodLevel, heartRate, activityLevel) {
     const recommendations = [];
     
-    // Base recommendations on stress level
     if (stressResult.level === 'high') {
         recommendations.push({
             icon: '🫁',
@@ -325,7 +260,6 @@ function generateRecommendations(stressResult, sleepHours, moodLevel, heartRate,
         });
     }
     
-    // Sleep-based recommendations
     if (sleepHours < 6) {
         recommendations.push({
             icon: '😴',
@@ -336,7 +270,6 @@ function generateRecommendations(stressResult, sleepHours, moodLevel, heartRate,
         });
     }
     
-    // Mood-based recommendations
     if (moodLevel <= 4) {
         recommendations.push({
             icon: '🎮',
@@ -348,7 +281,6 @@ function generateRecommendations(stressResult, sleepHours, moodLevel, heartRate,
         });
     }
     
-    // Heart rate recommendations
     if (heartRate > 90) {
         recommendations.push({
             icon: '🧘',
@@ -359,7 +291,6 @@ function generateRecommendations(stressResult, sleepHours, moodLevel, heartRate,
         });
     }
     
-    // Activity-based recommendations
     if (activityLevel === 'none') {
         recommendations.push({
             icon: '🏃',
@@ -370,7 +301,6 @@ function generateRecommendations(stressResult, sleepHours, moodLevel, heartRate,
         });
     }
     
-    // General recommendations for low stress
     if (stressResult.level === 'low') {
         recommendations.push({
             icon: '⭐',
@@ -381,7 +311,6 @@ function generateRecommendations(stressResult, sleepHours, moodLevel, heartRate,
         });
     }
     
-    // Always add crew check recommendation for medium/high
     if (stressResult.level !== 'low') {
         recommendations.push({
             icon: '👥',
@@ -393,22 +322,16 @@ function generateRecommendations(stressResult, sleepHours, moodLevel, heartRate,
         });
     }
     
-    return recommendations.slice(0, 4); // Max 4 recommendations
+    return recommendations.slice(0, 4);
 }
 
-// -------------------- 
-// Display Recommendations
-// -------------------- 
 function displayRecommendations(recommendations) {
     if (!recommendationsSection || !recommendationsList) return;
     
-    // Show section
     recommendationsSection.classList.remove('hidden');
     
-    // Clear existing
     recommendationsList.innerHTML = '';
     
-    // Add each recommendation
     recommendations.forEach((rec, index) => {
         const item = document.createElement('div');
         item.className = 'recommendation-item fade-in';
@@ -433,7 +356,6 @@ function displayRecommendations(recommendations) {
         recommendationsList.appendChild(item);
     });
     
-    // Save recommendations to Firebase
     recommendations.forEach(rec => {
         saveRecommendation({
             title: rec.title,
@@ -442,41 +364,30 @@ function displayRecommendations(recommendations) {
     });
 }
 
-// -------------------- 
-// Update Local Stats
-// -------------------- 
 function updateLocalStats(level) {
-    // Update last check time
     if (lastCheckTime) {
         const now = new Date();
         lastCheckTime.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
     
-    // Update checks today (increment)
     if (checksToday) {
         const current = parseInt(checksToday.textContent) || 0;
         checksToday.textContent = current + 1;
     }
     
-    // Update average stress display
     if (avgStress) {
         avgStress.textContent = capitalizeFirst(level);
     }
 }
 
-// -------------------- 
-// Simulate Heart Rate
-// -------------------- 
 function simulateHeartRate() {
-    // Simulate realistic heart rate with slight variation
     const baseRate = 72;
-    const variation = Math.floor(Math.random() * 30) - 10; // -10 to +20
+    const variation = Math.floor(Math.random() * 30) - 10;
     const simulatedRate = baseRate + variation;
     
     if (heartRateInput) {
         heartRateInput.value = simulatedRate;
         
-        // Add visual feedback
         heartRateInput.classList.add('border-cyan-500');
         setTimeout(() => {
             heartRateInput.classList.remove('border-cyan-500');
@@ -486,9 +397,6 @@ function simulateHeartRate() {
     showToast('info', 'Heart Rate Simulated', `${simulatedRate} BPM detected`);
 }
 
-// -------------------- 
-// High Stress Modal
-// -------------------- 
 function showHighStressModal() {
     if (highStressModal) {
         highStressModal.classList.remove('hidden');
@@ -501,46 +409,31 @@ function closeHighStressModal() {
     }
 }
 
-// -------------------- 
-// Utility Functions
-// -------------------- 
 function capitalizeFirst(string) {
     if (!string) return '';
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// -------------------- 
-// Initialize Page
-// -------------------- 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 ASTRA App initialized');
     
-    // Set current time for last check placeholder
     if (lastCheckTime) {
         lastCheckTime.textContent = '--:--';
     }
 });
 
-// -------------------- 
-// Keyboard Shortcuts
-// -------------------- 
 document.addEventListener('keydown', (e) => {
-    // Ctrl/Cmd + Enter to submit form
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         if (stressForm) {
             stressForm.dispatchEvent(new Event('submit'));
         }
     }
     
-    // Escape to close modals
     if (e.key === 'Escape') {
         closeHighStressModal();
     }
 });
 
-// -------------------- 
-// Export functions for global access
-// -------------------- 
 window.simulateHeartRate = simulateHeartRate;
 window.closeHighStressModal = closeHighStressModal;
 window.capitalizeFirst = capitalizeFirst;

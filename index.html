@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASTRA - AI Astronaut Wellness Companion</title>
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts - Orbitron (Space Theme) -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Custom Styles -->
     <link rel="stylesheet" href="css/styles.css">
     
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -39,22 +35,18 @@
 </head>
 <body class="bg-space-dark min-h-screen font-inter text-white overflow-x-hidden">
     
-    <!-- Stars Background -->
     <div class="stars-container fixed inset-0 pointer-events-none z-0">
         <div id="stars"></div>
         <div id="stars2"></div>
         <div id="stars3"></div>
     </div>
 
-    <!-- Floating Planets (Decorative) -->
     <div class="fixed top-20 right-10 w-32 h-32 rounded-full bg-gradient-to-br from-purple-600/20 to-pink-600/20 blur-xl pointer-events-none"></div>
     <div class="fixed bottom-40 left-5 w-48 h-48 rounded-full bg-gradient-to-br from-cyan-600/10 to-blue-600/10 blur-2xl pointer-events-none"></div>
 
-    <!-- Navigation -->
     <nav class="relative z-50 border-b border-white/10 backdrop-blur-md bg-space-dark/50">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <!-- Logo -->
                 <a href="index.html" class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center glow-cyan">
                         <span class="font-orbitron font-bold text-lg">A</span>
@@ -62,14 +54,12 @@
                     <span class="font-orbitron font-bold text-xl tracking-wider">ASTRA</span>
                 </a>
 
-                <!-- Nav Links -->
                 <div class="hidden md:flex items-center gap-8">
                     <a href="index.html" class="nav-link active">Stress Check</a>
                     <a href="crew.html" class="nav-link">Crew Status</a>
                     <a href="games.html" class="nav-link">Relaxation</a>
                 </div>
 
-                <!-- User Profile -->
                 <div id="userSection" class="flex items-center gap-4">
                     <div id="userLoggedOut">
                         <a href="login.html" class="btn-primary text-sm px-4 py-2">Login</a>
@@ -83,7 +73,6 @@
                     </div>
                 </div>
 
-                <!-- Mobile Menu Button -->
                 <button id="mobileMenuBtn" class="md:hidden text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -91,7 +80,6 @@
                 </button>
             </div>
 
-            <!-- Mobile Menu -->
             <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 border-t border-white/10 pt-4">
                 <div class="flex flex-col gap-4">
                     <a href="index.html" class="nav-link active">Stress Check</a>
@@ -102,10 +90,8 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="relative z-10 max-w-7xl mx-auto px-4 py-8">
         
-        <!-- Hero Section -->
         <section class="text-center mb-12">
             <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Welcome, Astronaut
@@ -115,13 +101,10 @@
             </p>
         </section>
 
-        <!-- Main Grid -->
         <div class="grid lg:grid-cols-3 gap-8">
             
-            <!-- Left Column - Stress Input Form -->
             <div class="lg:col-span-2 space-y-6">
                 
-                <!-- Stress Detection Card -->
                 <div class="card">
                     <div class="card-header">
                         <div class="flex items-center gap-3">
@@ -139,7 +122,6 @@
 
                     <form id="stressForm" class="space-y-6">
                         
-                        <!-- Sleep Hours -->
                         <div class="input-group">
                             <label class="input-label">
                                 <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +142,6 @@
                             <div class="input-hint">Recommended: 7-9 hours</div>
                         </div>
 
-                        <!-- Mood Level Slider -->
                         <div class="input-group">
                             <label class="input-label">
                                 <svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +166,6 @@
                             </div>
                         </div>
 
-                        <!-- Heart Rate -->
                         <div class="input-group">
                             <label class="input-label">
                                 <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,7 +194,6 @@
                             <div class="input-hint">Normal resting: 60-100 BPM</div>
                         </div>
 
-                        <!-- Physical Activity -->
                         <div class="input-group">
                             <label class="input-label">
                                 <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -230,7 +209,6 @@
                             </select>
                         </div>
 
-                        <!-- Submit Button -->
                         <button type="submit" class="btn-primary w-full py-4 text-lg font-orbitron">
                             <span id="analyzeText">Analyze Stress Level</span>
                             <div id="analyzeLoader" class="hidden loader"></div>
@@ -238,7 +216,6 @@
                     </form>
                 </div>
 
-                <!-- Recommendations Section -->
                 <div id="recommendationsSection" class="card hidden">
                     <div class="card-header">
                         <div class="flex items-center gap-3">
@@ -259,27 +236,22 @@
                 </div>
             </div>
 
-            <!-- Right Column - Results & Status -->
             <div class="space-y-6">
                 
-                <!-- Stress Level Result -->
                 <div class="card">
                     <div class="card-header">
                         <h2 class="font-orbitron font-bold text-lg text-center">Current Stress Level</h2>
                     </div>
                     
-                    <!-- Stress Gauge -->
                     <div class="flex flex-col items-center">
                         <div class="stress-gauge relative w-48 h-48 mb-4">
                             <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                <!-- Background Circle -->
                                 <circle 
                                     cx="50" cy="50" r="40" 
                                     fill="none" 
                                     stroke="#1e1e2e" 
                                     stroke-width="10"
                                 />
-                                <!-- Progress Circle -->
                                 <circle 
                                     id="stressCircle"
                                     cx="50" cy="50" r="40" 
@@ -304,19 +276,16 @@
                             </div>
                         </div>
 
-                        <!-- Stress Level Label -->
                         <div id="stressLevelBadge" class="stress-badge stress-badge-low">
                             <span id="stressLevelText">Awaiting Data</span>
                         </div>
 
-                        <!-- Stress Explanation -->
                         <p id="stressExplanation" class="text-gray-400 text-sm text-center mt-4">
                             Enter your metrics above and click "Analyze" to check your stress level.
                         </p>
                     </div>
                 </div>
 
-                <!-- Quick Stats -->
                 <div class="card">
                     <div class="card-header">
                         <h2 class="font-orbitron font-bold text-lg">Today's Summary</h2>
@@ -361,7 +330,6 @@
                     </div>
                 </div>
 
-                <!-- Crew Alert Preview -->
                 <div id="crewAlertPreview" class="card border-yellow-500/50 hidden">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center animate-pulse">
@@ -380,7 +348,6 @@
         </div>
     </main>
 
-    <!-- High Stress Alert Modal -->
     <div id="highStressModal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeHighStressModal()"></div>
         <div class="modal-content border-red-500/50">
@@ -407,9 +374,7 @@
         </div>
     </div>
 
-    <!-- ASTRA Chatbot Widget -->
     <div id="chatbotWidget" class="fixed bottom-6 right-6 z-50">
-        <!-- Chat Bubble Button -->
         <button 
             id="chatbotToggle" 
             onclick="toggleChatbot()"
@@ -418,9 +383,7 @@
             <span class="font-orbitron font-bold text-xl">A</span>
         </button>
 
-        <!-- Chat Window -->
         <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-80 sm:w-96 bg-space-dark border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Chat Header -->
             <div class="bg-gradient-to-r from-cyan-500/20 to-purple-600/20 p-4 border-b border-white/10">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
@@ -443,7 +406,6 @@
                 </div>
             </div>
 
-            <!-- Chat Messages -->
             <div id="chatMessages" class="h-80 overflow-y-auto p-4 space-y-4">
                 <div class="chat-message bot">
                     <div class="message-bubble">
@@ -452,7 +414,6 @@
                 </div>
             </div>
 
-            <!-- Chat Input -->
             <div class="p-4 border-t border-white/10">
                 <form id="chatForm" class="flex gap-2">
                     <input 
@@ -471,7 +432,6 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed top-4 right-4 z-50 hidden">
         <div class="bg-space-dark border border-white/10 rounded-lg p-4 shadow-lg flex items-center gap-3 max-w-sm">
             <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center"></div>
@@ -482,17 +442,14 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
-    <!-- App Scripts -->
     <script src="js/firebase.js"></script>
     <script src="js/app.js"></script>
     <script src="js/chatbot.js"></script>
 
-    <!-- Mobile Menu Toggle -->
     <script>
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mobileMenu').classList.toggle('hidden');

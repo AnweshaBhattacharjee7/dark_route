@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASTRA - Crew Status Dashboard</title>
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts - Orbitron (Space Theme) -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Custom Styles -->
     <link rel="stylesheet" href="css/styles.css">
     
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -39,22 +35,18 @@
 </head>
 <body class="bg-space-dark min-h-screen font-inter text-white overflow-x-hidden">
     
-    <!-- Stars Background -->
     <div class="stars-container fixed inset-0 pointer-events-none z-0">
         <div id="stars"></div>
         <div id="stars2"></div>
         <div id="stars3"></div>
     </div>
 
-    <!-- Floating Planets (Decorative) -->
     <div class="fixed top-40 right-20 w-40 h-40 rounded-full bg-gradient-to-br from-indigo-600/20 to-purple-600/20 blur-2xl pointer-events-none"></div>
     <div class="fixed bottom-20 left-10 w-56 h-56 rounded-full bg-gradient-to-br from-cyan-600/10 to-teal-600/10 blur-3xl pointer-events-none"></div>
 
-    <!-- Navigation -->
     <nav class="relative z-50 border-b border-white/10 backdrop-blur-md bg-space-dark/50">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <!-- Logo -->
                 <a href="index.html" class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center glow-cyan">
                         <span class="font-orbitron font-bold text-lg">A</span>
@@ -62,22 +54,18 @@
                     <span class="font-orbitron font-bold text-xl tracking-wider">ASTRA</span>
                 </a>
 
-                <!-- Nav Links -->
                 <div class="hidden md:flex items-center gap-8">
                     <a href="index.html" class="nav-link">Stress Check</a>
                     <a href="crew.html" class="nav-link active">Crew Status</a>
                     <a href="games.html" class="nav-link">Relaxation</a>
                 </div>
 
-                <!-- Connection Status & User Profile -->
                 <div class="flex items-center gap-4">
-                    <!-- Connection Status -->
                     <div id="connectionStatus" class="connection-status hidden md:flex">
                         <div class="connection-dot online"></div>
                         <span class="text-gray-400">Connected</span>
                     </div>
 
-                    <!-- User Profile -->
                     <div id="userSection" class="flex items-center gap-4">
                         <div id="userLoggedOut">
                             <a href="login.html" class="btn-primary text-sm px-4 py-2">Login</a>
@@ -92,7 +80,6 @@
                     </div>
                 </div>
 
-                <!-- Mobile Menu Button -->
                 <button id="mobileMenuBtn" class="md:hidden text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -100,7 +87,6 @@
                 </button>
             </div>
 
-            <!-- Mobile Menu -->
             <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 border-t border-white/10 pt-4">
                 <div class="flex flex-col gap-4">
                     <a href="index.html" class="nav-link">Stress Check</a>
@@ -111,10 +97,8 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="relative z-10 max-w-7xl mx-auto px-4 py-8">
         
-        <!-- Page Header -->
         <section class="mb-8">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
@@ -149,9 +133,7 @@
             </div>
         </section>
 
-        <!-- Stats Cards -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <!-- Total Crew -->
             <div class="card p-4">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center">
@@ -166,7 +148,6 @@
                 </div>
             </div>
 
-            <!-- Online -->
             <div class="card p-4">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
@@ -181,7 +162,6 @@
                 </div>
             </div>
 
-            <!-- Active Alerts -->
             <div class="card p-4">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center relative">
@@ -197,7 +177,6 @@
                 </div>
             </div>
 
-            <!-- High Stress -->
             <div class="card p-4">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
@@ -213,10 +192,8 @@
             </div>
         </section>
 
-        <!-- Main Grid -->
         <div class="grid lg:grid-cols-3 gap-8">
             
-            <!-- Crew List (2 columns) -->
             <div class="lg:col-span-2">
                 <div class="card">
                     <div class="card-header">
@@ -233,7 +210,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Filter Buttons -->
                             <div class="flex gap-2">
                                 <button 
                                     data-filter="all"
@@ -260,19 +236,15 @@
                         </div>
                     </div>
 
-                    <!-- Loading State -->
                     <div id="crewLoadingState" class="py-12 text-center">
                         <div class="loader mx-auto mb-4"></div>
                         <p class="text-gray-400">Loading crew data...</p>
                     </div>
 
-                    <!-- Crew Grid -->
                     <div id="crewGrid" class="grid sm:grid-cols-2 gap-4">
-                        <!-- Crew cards will be inserted here dynamically -->
                     </div>
                 </div>
 
-                <!-- Privacy Notice -->
                 <div class="mt-4 p-4 rounded-lg bg-cyan-500/5 border border-cyan-500/20">
                     <div class="flex items-start gap-3">
                         <svg class="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,10 +260,8 @@
                 </div>
             </div>
 
-            <!-- Alerts Panel (1 column) -->
             <div class="space-y-6">
                 
-                <!-- Alerts Section -->
                 <div class="card">
                     <div class="card-header">
                         <div class="flex items-center gap-3">
@@ -307,12 +277,9 @@
                         </div>
                     </div>
 
-                    <!-- Alerts List -->
                     <div id="alertsList" class="space-y-3">
-                        <!-- Alerts will be inserted here dynamically -->
                     </div>
 
-                    <!-- No Alerts Message -->
                     <div id="noAlertsMessage" class="text-center py-8">
                         <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/10 flex items-center justify-center">
                             <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,7 +291,6 @@
                     </div>
                 </div>
 
-                <!-- High Stress Indicator -->
                 <div id="highStressIndicator" class="card border-red-500/50 hidden">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center animate-pulse">
@@ -339,7 +305,6 @@
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
                 <div class="card">
                     <div class="card-header">
                         <h2 class="font-orbitron font-bold text-lg">Quick Actions</h2>
@@ -393,7 +358,6 @@
                     </div>
                 </div>
 
-                <!-- Sync Status Card -->
                 <div class="card bg-gradient-to-br from-purple-500/10 to-cyan-500/10">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
@@ -418,9 +382,7 @@
         </div>
     </main>
 
-    <!-- ASTRA Chatbot Widget -->
     <div id="chatbotWidget" class="fixed bottom-6 right-6 z-50">
-        <!-- Chat Bubble Button -->
         <button 
             id="chatbotToggle" 
             onclick="toggleChatbot()"
@@ -429,9 +391,7 @@
             <span class="font-orbitron font-bold text-xl">A</span>
         </button>
 
-        <!-- Chat Window -->
         <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-80 sm:w-96 bg-space-dark border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Chat Header -->
             <div class="bg-gradient-to-r from-cyan-500/20 to-purple-600/20 p-4 border-b border-white/10">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
@@ -454,7 +414,6 @@
                 </div>
             </div>
 
-            <!-- Chat Messages -->
             <div id="chatMessages" class="h-80 overflow-y-auto p-4 space-y-4">
                 <div class="chat-message bot">
                     <div class="message-bubble">
@@ -463,7 +422,6 @@
                 </div>
             </div>
 
-            <!-- Chat Input -->
             <div class="p-4 border-t border-white/10">
                 <form id="chatForm" class="flex gap-2">
                     <input 
@@ -482,7 +440,6 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed top-4 right-4 z-50 hidden">
         <div class="bg-space-dark border border-white/10 rounded-lg p-4 shadow-lg flex items-center gap-3 max-w-sm">
             <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center"></div>
@@ -493,17 +450,14 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
-    <!-- App Scripts -->
     <script src="js/firebase.js"></script>
     <script src="js/crew.js"></script>
     <script src="js/chatbot.js"></script>
 
-    <!-- Mobile Menu Toggle -->
     <script>
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('mobileMenu').classList.toggle('hidden');

@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASTRA - Login</title>
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts - Orbitron (Space Theme) -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Custom Styles -->
     <link rel="stylesheet" href="css/styles.css">
     
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -39,34 +35,28 @@
 </head>
 <body class="bg-space-dark min-h-screen font-inter text-white overflow-x-hidden">
     
-    <!-- Stars Background -->
     <div class="stars-container fixed inset-0 pointer-events-none z-0">
         <div id="stars"></div>
         <div id="stars2"></div>
         <div id="stars3"></div>
     </div>
 
-    <!-- Floating Planets (Decorative) -->
     <div class="fixed top-20 left-10 w-40 h-40 rounded-full bg-gradient-to-br from-purple-600/20 to-pink-600/20 blur-2xl pointer-events-none"></div>
     <div class="fixed bottom-20 right-10 w-56 h-56 rounded-full bg-gradient-to-br from-cyan-600/15 to-blue-600/15 blur-3xl pointer-events-none"></div>
     <div class="fixed top-1/2 right-1/4 w-32 h-32 rounded-full bg-gradient-to-br from-indigo-600/10 to-purple-600/10 blur-2xl pointer-events-none"></div>
 
-    <!-- Login Container -->
     <div class="login-container relative z-10">
         <div class="login-card">
             
-            <!-- Logo -->
             <div class="login-logo glow-cyan">
                 <span>A</span>
             </div>
             
-            <!-- Title -->
             <div class="text-center mb-8">
                 <h1 class="font-orbitron text-2xl font-bold mb-2">Welcome to ASTRA</h1>
                 <p class="text-gray-400 text-sm">Your AI Wellness Companion for Space Missions</p>
             </div>
 
-            <!-- Tab Switcher -->
             <div class="flex mb-6 bg-white/5 rounded-lg p-1">
                 <button 
                     id="loginTab"
@@ -84,9 +74,7 @@
                 </button>
             </div>
 
-            <!-- Login Form -->
             <form id="loginForm" class="space-y-4" onsubmit="handleLogin(event)">
-                <!-- Email -->
                 <div class="input-group">
                     <label class="input-label">
                         <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +91,6 @@
                     >
                 </div>
 
-                <!-- Password -->
                 <div class="input-group">
                     <label class="input-label">
                         <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +119,6 @@
                     </div>
                 </div>
 
-                <!-- Forgot Password -->
                 <div class="text-right">
                     <button 
                         type="button"
@@ -143,16 +129,13 @@
                     </button>
                 </div>
 
-                <!-- Submit Button -->
                 <button type="submit" class="btn-primary w-full py-3">
                     <span id="loginBtnText">Launch Into ASTRA</span>
                     <div id="loginLoader" class="hidden loader"></div>
                 </button>
             </form>
 
-            <!-- Signup Form (Hidden by default) -->
             <form id="signupForm" class="space-y-4 hidden" onsubmit="handleSignup(event)">
-                <!-- Name -->
                 <div class="input-group">
                     <label class="input-label">
                         <svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,7 +153,6 @@
                     >
                 </div>
 
-                <!-- Email -->
                 <div class="input-group">
                     <label class="input-label">
                         <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +169,6 @@
                     >
                 </div>
 
-                <!-- Password -->
                 <div class="input-group">
                     <label class="input-label">
                         <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,7 +199,6 @@
                     <div class="input-hint">Minimum 6 characters</div>
                 </div>
 
-                <!-- Confirm Password -->
                 <div class="input-group">
                     <label class="input-label">
                         <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,21 +215,18 @@
                     >
                 </div>
 
-                <!-- Submit Button -->
                 <button type="submit" class="btn-primary w-full py-3">
                     <span id="signupBtnText">Create Account</span>
                     <div id="signupLoader" class="hidden loader"></div>
                 </button>
             </form>
 
-            <!-- Divider -->
             <div class="flex items-center my-6">
                 <div class="flex-1 h-px bg-white/10"></div>
                 <span class="px-4 text-gray-500 text-sm">or continue with</span>
                 <div class="flex-1 h-px bg-white/10"></div>
             </div>
 
-            <!-- Anonymous Login -->
             <button 
                 onclick="handleAnonymousLogin()"
                 class="btn-secondary w-full py-3 mb-4"
@@ -260,7 +237,6 @@
                 <span>Continue as Guest Astronaut</span>
             </button>
 
-            <!-- Back to Home -->
             <div class="text-center">
                 <a href="index.html" class="text-sm text-gray-500 hover:text-white transition-colors">
                     ← Back to Home
@@ -268,7 +244,6 @@
             </div>
         </div>
 
-        <!-- Mission Quote -->
         <div class="text-center mt-8 max-w-md mx-auto">
             <p class="text-gray-500 text-sm italic">
                 "The stars are not meant to be gazed upon alone. ASTRA is here to ensure no astronaut ever feels isolated."
@@ -277,7 +252,6 @@
         </div>
     </div>
 
-    <!-- Forgot Password Modal -->
     <div id="forgotPasswordModal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeForgotPassword()"></div>
         <div class="modal-content">
@@ -315,7 +289,6 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed top-4 right-4 z-50 hidden">
         <div class="bg-space-dark border border-white/10 rounded-lg p-4 shadow-lg flex items-center gap-3 max-w-sm">
             <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center"></div>
@@ -326,25 +299,19 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
-    <!-- Firebase Config -->
     <script src="js/firebase.js"></script>
 
-    <!-- Login Page Script -->
     <script>
-        // Check if already logged in
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // Already logged in, redirect to home
                 window.location.href = 'index.html';
             }
         });
 
-        // Switch between Login and Signup tabs
         function switchAuthTab(tab) {
             const loginTab = document.getElementById('loginTab');
             const signupTab = document.getElementById('signupTab');
@@ -368,7 +335,6 @@
             }
         }
 
-        // Toggle password visibility
         function togglePasswordVisibility(inputId) {
             const input = document.getElementById(inputId);
             if (input.type === 'password') {
@@ -378,7 +344,6 @@
             }
         }
 
-        // Handle Login
         async function handleLogin(e) {
             e.preventDefault();
             
@@ -387,7 +352,6 @@
             const btnText = document.getElementById('loginBtnText');
             const loader = document.getElementById('loginLoader');
 
-            // Show loading
             btnText.classList.add('hidden');
             loader.classList.remove('hidden');
 
@@ -401,7 +365,6 @@
             }
         }
 
-        // Handle Signup
         async function handleSignup(e) {
             e.preventDefault();
             
@@ -412,13 +375,11 @@
             const btnText = document.getElementById('signupBtnText');
             const loader = document.getElementById('signupLoader');
 
-            // Validate passwords match
             if (password !== confirmPassword) {
                 showToast('error', 'Password Mismatch', 'Passwords do not match');
                 return;
             }
 
-            // Show loading
             btnText.classList.add('hidden');
             loader.classList.remove('hidden');
 
@@ -432,7 +393,6 @@
             }
         }
 
-        // Handle Anonymous Login
         async function handleAnonymousLogin() {
             try {
                 await signInAnonymously();
@@ -441,17 +401,14 @@
             }
         }
 
-        // Show Forgot Password Modal
         function showForgotPassword() {
             document.getElementById('forgotPasswordModal').classList.remove('hidden');
         }
 
-        // Close Forgot Password Modal
         function closeForgotPassword() {
             document.getElementById('forgotPasswordModal').classList.add('hidden');
         }
 
-        // Handle Forgot Password
         async function handleForgotPassword(e) {
             e.preventDefault();
             
@@ -465,14 +422,12 @@
             }
         }
 
-        // Handle keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeForgotPassword();
             }
         });
 
-        // Auto-focus email input on page load
         document.addEventListener('DOMContentLoaded', () => {
             const loginEmail = document.getElementById('loginEmail');
             if (loginEmail) {

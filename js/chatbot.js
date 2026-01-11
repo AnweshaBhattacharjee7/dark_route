@@ -1,22 +1,9 @@
-/* ========================================
-   ASTRA - AI Chatbot
-   Gemini API Integration for Emotional Support
-   ======================================== */
+const GEMINI_API_KEY = 'AIzaSyDnosKWIwNr9xDkD5RCCwkOln5ZkMGsjXQ';
 
-// -------------------- 
-// Configuration
-// -------------------- 
-
-// IMPORTANT: Replace with your actual Gemini API key
-const GEMINI_API_KEY = 'AIzaSyDnosKWIwNr9xDkD5RCCwkOln5ZkMGsjXQ'; // <-- PUT YOUR KEY HERE
-
-// Use the correct Gemini API endpoint
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
-// Debug mode - set to true to see console logs
 const DEBUG_MODE = true;
 
-// ASTRA's personality and context
 const ASTRA_SYSTEM_PROMPT = `You are ASTRA (Artificial Space Therapeutic Response Assistant), an AI companion designed to support astronauts' psychological well-being during space missions.
 
 Your personality traits:
@@ -43,25 +30,16 @@ Guidelines:
 
 Remember: You're speaking to astronauts who may be isolated, stressed, or homesick. Be their supportive companion.`;
 
-// -------------------- 
-// DOM Elements
-// -------------------- 
 const chatbotToggle = document.getElementById('chatbotToggle');
 const chatWindow = document.getElementById('chatWindow');
 const chatMessages = document.getElementById('chatMessages');
 const chatForm = document.getElementById('chatForm');
 const chatInput = document.getElementById('chatInput');
 
-// -------------------- 
-// State
-// -------------------- 
 let isChatOpen = false;
 let conversationHistory = [];
 let isTyping = false;
 
-// -------------------- 
-// Debug Logger
-// -------------------- 
 function debugLog(message, data = null) {
     if (DEBUG_MODE) {
         console.log(`[ASTRA Chatbot] ${message}`);
@@ -71,17 +49,11 @@ function debugLog(message, data = null) {
     }
 }
 
-// -------------------- 
-// Event Listeners
-// -------------------- 
-
-// Chat form submission
 if (chatForm) {
     chatForm.addEventListener('submit', handleChatSubmit);
     debugLog('Chat form listener attached');
 }
 
-// Enter key to send (but allow Shift+Enter for new line)
 if (chatInput) {
     chatInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -91,9 +63,6 @@ if (chatInput) {
     });
 }
 
-// -------------------- 
-// Toggle Chatbot
-// -------------------- 
 function toggleChatbot() {
     isChatOpen = !isChatOpen;
     
@@ -102,7 +71,6 @@ function toggleChatbot() {
             chatWindow.classList.remove('hidden');
             if (chatInput) chatInput.focus();
             
-            // Load chat history on first open
             if (conversationHistory.length === 0 && typeof getChatHistory === 'function') {
                 loadChatHistory();
             }
@@ -112,16 +80,12 @@ function toggleChatbot() {
     }
 }
 
-// Open chatbot (for external calls)
 function openChatbot() {
     if (!isChatOpen) {
         toggleChatbot();
     }
 }
 
-// -------------------- 
-// Handle Chat Submit
-// -------------------- 
 async function handleChatSubmit(e) {
     e.preventDefault();
     
@@ -130,52 +94,39 @@ async function handleChatSubmit(e) {
     
     debugLog('User message:', message);
     
-    // Clear input
     chatInput.value = '';
     
-    // Add user message to UI
     addMessage(message, 'user');
     
-    // Save user message to Firebase (if function exists)
     if (typeof saveChatMessage === 'function') {
         saveChatMessage(message, 'user');
     }
     
-    // Add to conversation history for context
     conversationHistory.push({
         role: 'user',
         parts: [{ text: message }]
     });
     
-    // Show typing indicator
     showTypingIndicator();
     
-    // Get AI response
     const response = await getAstraResponse(message);
     
     debugLog('ASTRA response:', response);
     
-    // Hide typing indicator
     hideTypingIndicator();
     
-    // Add ASTRA's response to UI
     addMessage(response, 'bot');
     
-    // Save ASTRA's response to Firebase (if function exists)
     if (typeof saveChatMessage === 'function') {
         saveChatMessage(response, 'astra');
     }
     
-    // Add to conversation history
     conversationHistory.push({
         role: 'model',
         parts: [{ text: response }]
     });
 }
 
-// -------------------- 
-// Add Message to UI
-// -------------------- 
 function addMessage(text, sender) {
     if (!chatMessages) return;
     
@@ -189,13 +140,9 @@ function addMessage(text, sender) {
     messageDiv.appendChild(bubble);
     chatMessages.appendChild(messageDiv);
     
-    // Scroll to bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// -------------------- 
-// Typing Indicator
-// -------------------- 
 function showTypingIndicator() {
     isTyping = true;
     
@@ -226,11 +173,7 @@ function hideTypingIndicator() {
     }
 }
 
-// -------------------- 
-// Get ASTRA Response (Gemini API)
-// -------------------- 
 async function getAstraResponse(userMessage) {
-    // Check if API key is configured
     if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE' || GEMINI_API_KEY.length < 10) {
         debugLog('❌ API key not configured properly!');
         console.error('ASTRA: Gemini API key is not set. Please add your API key in chatbot.js');
@@ -240,7 +183,6 @@ async function getAstraResponse(userMessage) {
     debugLog('🔑 API Key found (first 10 chars):', GEMINI_API_KEY.substring(0, 10) + '...');
     
     try {
-        // Build the request body
         const requestBody = {
             contents: [
                 {
@@ -256,10 +198,8 @@ async function getAstraResponse(userMessage) {
             }
         };
         
-        // If we have conversation history, use multi-turn format
         if (conversationHistory.length > 0) {
             requestBody.contents = [
-                // System context as first user message
                 {
                     role: 'user',
                     parts: [{ text: ASTRA_SYSTEM_PROMPT }]
@@ -268,9 +208,7 @@ async function getAstraResponse(userMessage) {
                     role: 'model',
                     parts: [{ text: 'Understood. I am ASTRA, ready to support astronauts with empathy and care. How can I help you today? 🚀' }]
                 },
-                // Previous conversation
-                ...conversationHistory.slice(-10), // Keep last 10 messages for context
-                // Current message
+                ...conversationHistory.slice(-10),
                 {
                     role: 'user',
                     parts: [{ text: userMessage }]
@@ -295,7 +233,6 @@ async function getAstraResponse(userMessage) {
             const errorData = await response.json().catch(() => ({}));
             debugLog('❌ API Error Response:', errorData);
             
-            // Handle specific error codes
             if (response.status === 400) {
                 console.error('ASTRA: Bad request - check API format');
             } else if (response.status === 401 || response.status === 403) {
@@ -312,7 +249,6 @@ async function getAstraResponse(userMessage) {
         const data = await response.json();
         debugLog('✅ API Response:', data);
         
-        // Extract the response text
         if (data.candidates && data.candidates[0] && data.candidates[0].content) {
             const text = data.candidates[0].content.parts[0].text;
             debugLog('💬 Extracted response:', text);
@@ -329,7 +265,6 @@ async function getAstraResponse(userMessage) {
         console.error('ASTRA Chatbot Error:', error);
         debugLog('❌ Error details:', error.message);
         
-        // Check if it's a network/CORS error
         if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
             console.error('ASTRA: Network error - this might be a CORS issue. Consider using a backend proxy.');
         }
@@ -338,15 +273,11 @@ async function getAstraResponse(userMessage) {
     }
 }
 
-// -------------------- 
-// Fallback Responses (When API unavailable)
-// -------------------- 
 function getFallbackResponse(userMessage) {
     debugLog('⚠️ Using fallback response');
     
     const lowerMessage = userMessage.toLowerCase();
     
-    // Stress-related responses
     if (lowerMessage.includes('stress') || lowerMessage.includes('anxious') || lowerMessage.includes('worried')) {
         const stressResponses = [
             "I hear you, and it's completely normal to feel stressed in space. Let's take a moment together. Try taking 3 deep breaths with me - inhale for 4 counts, hold for 4, exhale for 6. 🌟",
@@ -356,7 +287,6 @@ function getFallbackResponse(userMessage) {
         return stressResponses[Math.floor(Math.random() * stressResponses.length)];
     }
     
-    // Loneliness/homesickness
     if (lowerMessage.includes('lonely') || lowerMessage.includes('miss') || lowerMessage.includes('home') || lowerMessage.includes('alone')) {
         const lonelyResponses = [
             "Missing Earth and loved ones is one of the hardest parts of space travel. Your feelings matter. Would you like to share a favorite memory from home? 🌍",
@@ -366,7 +296,6 @@ function getFallbackResponse(userMessage) {
         return lonelyResponses[Math.floor(Math.random() * lonelyResponses.length)];
     }
     
-    // Sleep issues
     if (lowerMessage.includes('sleep') || lowerMessage.includes('tired') || lowerMessage.includes('insomnia') || lowerMessage.includes('rest')) {
         const sleepResponses = [
             "Sleep in microgravity can be challenging. Try dimming your lights 30 minutes before rest, and avoid screens. Would you like me to guide you through a relaxation technique? 🌙",
@@ -376,7 +305,6 @@ function getFallbackResponse(userMessage) {
         return sleepResponses[Math.floor(Math.random() * sleepResponses.length)];
     }
     
-    // Feeling good/positive
     if (lowerMessage.includes('good') || lowerMessage.includes('great') || lowerMessage.includes('happy') || lowerMessage.includes('fine')) {
         const positiveResponses = [
             "That's wonderful to hear! 🚀 Keep riding that positive momentum. What's something that made you feel good today?",
@@ -386,7 +314,6 @@ function getFallbackResponse(userMessage) {
         return positiveResponses[Math.floor(Math.random() * positiveResponses.length)];
     }
     
-    // Greetings
     if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey') || lowerMessage.match(/^hi$/i)) {
         const greetingResponses = [
             "Hello, astronaut! It's great to hear from you. How are you feeling today? I'm here to support you. 🚀",
@@ -396,7 +323,6 @@ function getFallbackResponse(userMessage) {
         return greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
     }
     
-    // Help request
     if (lowerMessage.includes('help') || lowerMessage.includes('support') || lowerMessage.includes('need')) {
         const helpResponses = [
             "I'm here to help. You can talk to me about stress, sleep issues, loneliness, or anything else on your mind. What would you like to discuss? 💫",
@@ -406,12 +332,10 @@ function getFallbackResponse(userMessage) {
         return helpResponses[Math.floor(Math.random() * helpResponses.length)];
     }
     
-    // Breathing exercise request
     if (lowerMessage.includes('breath') || lowerMessage.includes('calm') || lowerMessage.includes('relax')) {
         return "Let's do a quick breathing exercise together. 🫁\n\n1. Breathe IN slowly for 4 seconds...\n2. HOLD your breath for 4 seconds...\n3. Breathe OUT slowly for 6 seconds...\n\nRepeat this 4 times. I'll be right here when you're done. How do you feel?";
     }
     
-    // Thanks
     if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
         const thankResponses = [
             "You're very welcome! Remember, supporting you is my purpose. I'm always here when you need me. 🚀",
@@ -421,7 +345,6 @@ function getFallbackResponse(userMessage) {
         return thankResponses[Math.floor(Math.random() * thankResponses.length)];
     }
     
-    // Default response
     const defaultResponses = [
         "I'm here to listen and support you. Could you tell me more about what's on your mind? 🌟",
         "Thank you for sharing. I'm here for you, whether it's about stress, sleep, emotions, or just needing to talk. What would help you most right now?",
@@ -432,9 +355,6 @@ function getFallbackResponse(userMessage) {
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
 }
 
-// -------------------- 
-// Load Chat History from Firebase
-// -------------------- 
 async function loadChatHistory() {
     try {
         if (typeof getChatHistory !== 'function') {
@@ -445,17 +365,14 @@ async function loadChatHistory() {
         const messages = await getChatHistory(10);
         
         if (messages && messages.length > 0) {
-            // Clear default welcome message
             if (chatMessages) {
                 chatMessages.innerHTML = '';
             }
             
-            // Add history messages
             messages.forEach(msg => {
                 const sender = msg.sender === 'astra' ? 'bot' : 'user';
                 addMessage(msg.message, sender);
                 
-                // Rebuild conversation history for context
                 conversationHistory.push({
                     role: msg.sender === 'astra' ? 'model' : 'user',
                     parts: [{ text: msg.message }]
@@ -469,9 +386,6 @@ async function loadChatHistory() {
     }
 }
 
-// -------------------- 
-// Quick Responses (Pre-defined buttons)
-// -------------------- 
 function sendQuickResponse(text) {
     if (chatInput) {
         chatInput.value = text;
@@ -479,9 +393,6 @@ function sendQuickResponse(text) {
     }
 }
 
-// -------------------- 
-// Clear Chat
-// -------------------- 
 function clearChat() {
     if (chatMessages) {
         chatMessages.innerHTML = `
@@ -496,9 +407,6 @@ function clearChat() {
     debugLog('Chat cleared');
 }
 
-// -------------------- 
-// Test API Connection
-// -------------------- 
 async function testGeminiAPI() {
     console.log('🧪 Testing Gemini API connection...');
     
@@ -538,14 +446,10 @@ async function testGeminiAPI() {
     }
 }
 
-// -------------------- 
-// Initialize
-// -------------------- 
 document.addEventListener('DOMContentLoaded', () => {
     debugLog('💬 ASTRA Chatbot initialized');
     debugLog('API Key configured:', GEMINI_API_KEY && GEMINI_API_KEY !== 'YOUR_API_KEY_HERE' ? 'Yes' : 'No');
     
-    // Add subtle animation to chat toggle
     if (chatbotToggle) {
         chatbotToggle.addEventListener('mouseenter', () => {
             chatbotToggle.style.animationPlayState = 'paused';
@@ -557,11 +461,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// -------------------- 
-// Export for Global Access
-// -------------------- 
 window.toggleChatbot = toggleChatbot;
 window.openChatbot = openChatbot;
 window.sendQuickResponse = sendQuickResponse;
 window.clearChat = clearChat;
-window.testGeminiAPI = testGeminiAPI; // For debugging
+window.testGeminiAPI = testGeminiAPI;

@@ -1,11 +1,3 @@
-/* ========================================
-   ASTRA - Crew Dashboard
-   Real-time Crew Monitoring & Alerts
-   ======================================== */
-
-// -------------------- 
-// DOM Elements
-// -------------------- 
 const crewGrid = document.getElementById('crewGrid');
 const crewCount = document.getElementById('crewCount');
 const onlineCount = document.getElementById('onlineCount');
@@ -16,51 +8,33 @@ const noAlertsMessage = document.getElementById('noAlertsMessage');
 const crewLoadingState = document.getElementById('crewLoadingState');
 const connectionStatus = document.getElementById('connectionStatus');
 
-// -------------------- 
-// State
-// -------------------- 
 let crewMembers = [];
 let activeAlerts = [];
 let unsubscribeCrew = null;
 let unsubscribeAlerts = null;
 
-// -------------------- 
-// Initialize Crew Page
-// -------------------- 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('👥 Crew Dashboard initialized');
     
-    // Wait for auth state
     auth.onAuthStateChanged((user) => {
         if (user) {
             initializeCrewDashboard();
         } else {
-            // Redirect to login if not authenticated
             window.location.href = 'login.html';
         }
     });
 });
 
-// -------------------- 
-// Initialize Dashboard
-// -------------------- 
 function initializeCrewDashboard() {
-    // Show loading state
     showLoadingState(true);
     
-    // Subscribe to real-time crew updates
     subscribeToCrewMembers();
     
-    // Subscribe to real-time alerts
     subscribeToAlerts();
     
-    // Update connection status
     updateConnectionStatus('online');
 }
 
-// -------------------- 
-// Subscribe to Crew Members (Real-time)
-// -------------------- 
 function subscribeToCrewMembers() {
     unsubscribeCrew = db.collection('users')
         .orderBy('lastCheckIn', 'desc')
@@ -75,7 +49,6 @@ function subscribeToCrewMembers() {
                 });
             });
             
-            // Update UI
             renderCrewMembers();
             updateCrewStats();
             showLoadingState(false);
@@ -90,13 +63,9 @@ function subscribeToCrewMembers() {
         });
 }
 
-// -------------------- 
-// Render Crew Members
-// -------------------- 
 function renderCrewMembers() {
     if (!crewGrid) return;
     
-    // Clear existing content
     crewGrid.innerHTML = '';
     
     if (crewMembers.length === 0) {
@@ -114,31 +83,24 @@ function renderCrewMembers() {
         return;
     }
     
-    // Sort: High stress first, then by online status
     const sortedCrew = [...crewMembers].sort((a, b) => {
-        // Priority: High stress > Medium stress > Low stress
         const stressPriority = { high: 0, medium: 1, low: 2 };
         const aPriority = stressPriority[a.stressLevel] ?? 2;
         const bPriority = stressPriority[b.stressLevel] ?? 2;
         
         if (aPriority !== bPriority) return aPriority - bPriority;
         
-        // Then by online status
         if (a.isOnline !== b.isOnline) return b.isOnline ? 1 : -1;
         
         return 0;
     });
     
-    // Render each crew member
     sortedCrew.forEach((member, index) => {
         const card = createCrewCard(member, index);
         crewGrid.appendChild(card);
     });
 }
 
-// -------------------- 
-// Create Crew Card
-// -------------------- 
 function createCrewCard(member, index) {
     const card = document.createElement('div');
     const isCurrentUser = member.id === currentUser?.uid;
@@ -148,7 +110,6 @@ function createCrewCard(member, index) {
     card.className = `crew-card ${isHighStress ? 'stress-high' : ''} fade-in`;
     card.style.animationDelay = `${index * 0.1}s`;
     
-    // Generate avatar color based on name
     const avatarColors = [
         'from-cyan-500 to-blue-600',
         'from-purple-500 to-pink-600',
@@ -160,28 +121,23 @@ function createCrewCard(member, index) {
     const colorIndex = member.displayName ? member.displayName.charCodeAt(0) % avatarColors.length : 0;
     const avatarColor = avatarColors[colorIndex];
     
-    // Format last check-in time
     let lastCheckIn = 'Never';
     if (member.lastCheckIn) {
         const date = member.lastCheckIn.toDate ? member.lastCheckIn.toDate() : new Date(member.lastCheckIn);
         lastCheckIn = formatTimeAgo(date);
     }
     
-    // Get status text and color
     const statusConfig = getStatusConfig(stressLevel);
     
     card.innerHTML = `
-        <!-- High Stress Indicator -->
         ${isHighStress ? `
             <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-pink-500"></div>
         ` : ''}
         
-        <!-- Avatar -->
         <div class="crew-avatar bg-gradient-to-br ${avatarColor}">
             ${member.displayName ? member.displayName.charAt(0).toUpperCase() : 'A'}
         </div>
         
-        <!-- Info -->
         <div class="crew-info">
             <div class="crew-name flex items-center gap-2">
                 ${member.displayName || 'Unknown Astronaut'}
@@ -193,7 +149,6 @@ function createCrewCard(member, index) {
             </div>
         </div>
         
-        <!-- Status -->
         <div class="crew-status">
             <div class="flex items-center gap-2">
                 <div class="status-indicator ${stressLevel}"></div>
@@ -206,7 +161,6 @@ function createCrewCard(member, index) {
             </div>
         </div>
         
-        <!-- Action Button for High Stress -->
         ${isHighStress && !isCurrentUser ? `
             <button 
                 onclick="offerSupport('${member.id}', '${member.displayName}')"
@@ -220,9 +174,6 @@ function createCrewCard(member, index) {
     return card;
 }
 
-// -------------------- 
-// Get Status Configuration
-// -------------------- 
 function getStatusConfig(stressLevel) {
     const configs = {
         low: {
@@ -248,9 +199,6 @@ function getStatusConfig(stressLevel) {
     return configs[stressLevel] || configs.low;
 }
 
-// -------------------- 
-// Update Crew Stats
-// -------------------- 
 function updateCrewStats() {
     const total = crewMembers.length;
     const online = crewMembers.filter(m => m.isOnline).length;
@@ -260,7 +208,6 @@ function updateCrewStats() {
     if (onlineCount) onlineCount.textContent = online;
     if (highStressCount) highStressCount.textContent = highStress;
     
-    // Update high stress indicator visibility
     const highStressIndicator = document.getElementById('highStressIndicator');
     if (highStressIndicator) {
         if (highStress > 0) {
@@ -271,9 +218,6 @@ function updateCrewStats() {
     }
 }
 
-// -------------------- 
-// Subscribe to Alerts (Real-time)
-// -------------------- 
 function subscribeToAlerts() {
     unsubscribeAlerts = db.collection('crewAlerts')
         .where('isActive', '==', true)
@@ -289,15 +233,12 @@ function subscribeToAlerts() {
                 });
             });
             
-            // Update alerts UI
             renderAlerts();
             updateAlertsCount();
             
-            // Check for new alerts (additions)
             snapshot.docChanges().forEach((change) => {
                 if (change.type === 'added') {
                     const alert = change.doc.data();
-                    // Don't notify for own alerts
                     if (alert.userId !== currentUser?.uid) {
                         playAlertSound();
                         showAlertNotification(alert);
@@ -310,13 +251,9 @@ function subscribeToAlerts() {
         });
 }
 
-// -------------------- 
-// Render Alerts
-// -------------------- 
 function renderAlerts() {
     if (!alertsList) return;
     
-    // Clear existing
     alertsList.innerHTML = '';
     
     if (activeAlerts.length === 0) {
@@ -332,15 +269,11 @@ function renderAlerts() {
     });
 }
 
-// -------------------- 
-// Create Alert Card
-// -------------------- 
 function createAlertCard(alert, index) {
     const div = document.createElement('div');
     div.className = 'alert-banner danger fade-in';
     div.style.animationDelay = `${index * 0.1}s`;
     
-    // Format timestamp
     let timeAgo = 'Just now';
     if (alert.timestamp) {
         const date = alert.timestamp.toDate ? alert.timestamp.toDate() : new Date(alert.timestamp);
@@ -374,15 +307,11 @@ function createAlertCard(alert, index) {
     return div;
 }
 
-// -------------------- 
-// Update Alerts Count
-// -------------------- 
 function updateAlertsCount() {
     if (alertsCount) {
         alertsCount.textContent = activeAlerts.length;
     }
     
-    // Update badge visibility
     const alertsBadge = document.getElementById('alertsBadge');
     if (alertsBadge) {
         if (activeAlerts.length > 0) {
@@ -394,9 +323,6 @@ function updateAlertsCount() {
     }
 }
 
-// -------------------- 
-// Dismiss Alert
-// -------------------- 
 async function dismissAlert(alertId) {
     try {
         await db.collection('crewAlerts').doc(alertId).update({
@@ -413,12 +339,8 @@ async function dismissAlert(alertId) {
     }
 }
 
-// -------------------- 
-// Offer Support to Crew Member
-// -------------------- 
 async function offerSupport(memberId, memberName) {
     try {
-        // Create a support notification for the crew member
         await db.collection('users').doc(memberId)
             .collection('notifications').add({
                 type: 'support',
@@ -431,7 +353,6 @@ async function offerSupport(memberId, memberName) {
         
         showToast('success', 'Support Offered', `${memberName} has been notified that you're thinking of them`);
         
-        // Open chatbot with suggestion
         if (typeof openChatbot === 'function') {
             openChatbot();
         }
@@ -442,14 +363,9 @@ async function offerSupport(memberId, memberName) {
     }
 }
 
-// -------------------- 
-// Show Alert Notification
-// -------------------- 
 function showAlertNotification(alert) {
-    // Show toast notification
     showToast('warning', '⚠️ Crew Alert', alert.message);
     
-    // Browser notification (if permitted)
     if (Notification.permission === 'granted') {
         new Notification('ASTRA - Crew Alert', {
             body: alert.message,
@@ -459,11 +375,7 @@ function showAlertNotification(alert) {
     }
 }
 
-// -------------------- 
-// Play Alert Sound
-// -------------------- 
 function playAlertSound() {
-    // Create a simple beep using Web Audio API
     try {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioContext.createOscillator();
@@ -486,9 +398,6 @@ function playAlertSound() {
     }
 }
 
-// -------------------- 
-// Request Notification Permission
-// -------------------- 
 async function requestNotificationPermission() {
     if ('Notification' in window && Notification.permission === 'default') {
         const permission = await Notification.requestPermission();
@@ -498,9 +407,6 @@ async function requestNotificationPermission() {
     }
 }
 
-// -------------------- 
-// Loading State
-// -------------------- 
 function showLoadingState(show) {
     if (crewLoadingState) {
         if (show) {
@@ -519,9 +425,6 @@ function showLoadingState(show) {
     }
 }
 
-// -------------------- 
-// Connection Status
-// -------------------- 
 function updateConnectionStatus(status) {
     if (!connectionStatus) return;
     
@@ -543,9 +446,6 @@ function updateConnectionStatus(status) {
     }
 }
 
-// -------------------- 
-// Format Time Ago
-// -------------------- 
 function formatTimeAgo(date) {
     const now = new Date();
     const diff = now - date;
@@ -563,9 +463,6 @@ function formatTimeAgo(date) {
     return date.toLocaleDateString();
 }
 
-// -------------------- 
-// Filter Crew
-// -------------------- 
 function filterCrew(filter) {
     const buttons = document.querySelectorAll('[data-filter]');
     buttons.forEach(btn => {
@@ -586,16 +483,12 @@ function filterCrew(filter) {
             break;
         case 'all':
         default:
-            // No filter
             break;
     }
     
     renderFilteredCrew(filteredCrew);
 }
 
-// -------------------- 
-// Render Filtered Crew
-// -------------------- 
 function renderFilteredCrew(crew) {
     if (!crewGrid) return;
     
@@ -616,15 +509,10 @@ function renderFilteredCrew(crew) {
     });
 }
 
-// -------------------- 
-// Refresh Data
-// -------------------- 
 function refreshCrewData() {
     showLoadingState(true);
     updateConnectionStatus('syncing');
     
-    // The real-time listeners will update automatically
-    // This is just for manual refresh UI feedback
     setTimeout(() => {
         showLoadingState(false);
         updateConnectionStatus('online');
@@ -632,18 +520,11 @@ function refreshCrewData() {
     }, 1000);
 }
 
-// -------------------- 
-// Cleanup on Page Leave
-// -------------------- 
 window.addEventListener('beforeunload', () => {
-    // Unsubscribe from real-time listeners
     if (unsubscribeCrew) unsubscribeCrew();
     if (unsubscribeAlerts) unsubscribeAlerts();
 });
 
-// -------------------- 
-// Export Functions
-// -------------------- 
 window.filterCrew = filterCrew;
 window.refreshCrewData = refreshCrewData;
 window.dismissAlert = dismissAlert;
